@@ -11,18 +11,25 @@ public class Repository {
     //for each tower, [0] is the bottom, last index is the top
     private List<List<Integer>> towers;
     private List<Move> moves;
+    private boolean initialized = false;
 
     private Repository(){
         towers = new ArrayList<>();
         moves = new ArrayList<>();
+        initialized = false;
+        System.out.println(towers);
+
+    }
+
+    public void init(int ringCount){
+        towers.clear();
         for(int i = 0; i < 3; i++){
             towers.add(new ArrayList<>());
         }
-        for(int i = 10; i > 0; i--){
+        for(int i = ringCount; i > 0; i--){
             towers.get(0).add(i);
         }
-        System.out.println(towers);
-
+        initialized = true;
     }
 
     public List<Integer> getTowerByIndex(int index){
@@ -93,6 +100,9 @@ public class Repository {
     public static Repository getInstance(){
         if(_instance == null){
             _instance = new Repository();
+        }
+        else if(!_instance.initialized){
+            throw new RuntimeException("Repository accessed before being initialized");
         }
         return _instance;
     }

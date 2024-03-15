@@ -75,22 +75,23 @@ public class DragDropUtil {
 
             clearProjection();
             SnapRange inRange = checkSnapRanges(ring);
-
+            Move made = null;
             if(inRange != null && (!inRange.hasOwner() || inRange.getOwner().getNum() > ring.getNum())){
                 ringPane.setCursor(Cursor.DEFAULT);
-                Move made = new Move(ring.getNum(), Repository.getInstance().getTower(ring.getNum()), inRange.getTower());
+                made = new Move(ring.getNum(), Repository.getInstance().getTower(ring.getNum()), inRange.getTower());
                 if(Tutor.getInstance().validateMove(made)){
-                    Repository.getInstance().applyMove(made);
 
                     ringPane.setLayoutX(inRange.getOgX() - (ringPane.getWidth() / 2));
                     ringPane.setLayoutY(inRange.getOgY() - ringPane.getHeight() + 1);
 
                     refreshCursors(made);
                 }
-                Repository.getInstance().applyMove(made);
 
+                Repository.getInstance().applyMove(made);
                 refreshTops();
-            }else{
+            }
+
+            if(made == null || !made.isValid()){
                 ringPane.setCursor(Cursor.OPEN_HAND);
                 ringPane.setLayoutX(startX);
                 ringPane.setLayoutY(startY);
@@ -135,7 +136,6 @@ public class DragDropUtil {
                 tops.add(new SnapRange(top.getVisualRing().getLayoutX() + (top.getVisualRing().getWidth() / 2), top.getVisualRing().getLayoutY(), DEFAULT_RANGE, top));
             }
         }
-
     }
 
     private SnapRange checkSnapRanges(Ring ring){

@@ -12,8 +12,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-
-<AnchorPane prefHeight="642.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mirohaap.towerofhanoitutor.WindowController">
+<AnchorPane prefHeight="642.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mirohaap.towerofhanoitutor.GameController">
    <children>
       <AnchorPane fx:id="hanoiworld" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="789.0" style="-fx-background-color: #e8d9ca;">
          <children>
@@ -62,11 +61,11 @@
       </AnchorPane>
       <AnchorPane fx:id="gamePanel" layoutX="29.0" layoutY="43.0" prefHeight="360.0" prefWidth="730.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="116.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
+            <Rectangle fx:id="tower1" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="116.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
             <Rectangle fx:id="tow1Bottom" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="20.0" layoutX="28.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="200.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="352.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
+            <Rectangle fx:id="tower2" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="352.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
             <Rectangle fx:id="tow2Bottom" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="20.0" layoutX="264.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="200.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="588.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
+            <Rectangle fx:id="tower3" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="319.0" layoutX="588.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="25.0" />
             <Rectangle fx:id="tow3Bottom" arcHeight="5.0" arcWidth="5.0" fill="#dec441" height="20.0" layoutX="500.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="200.0" />
             <StackPane fx:id="ring10" layoutX="33.0" layoutY="330.0">
                <children>

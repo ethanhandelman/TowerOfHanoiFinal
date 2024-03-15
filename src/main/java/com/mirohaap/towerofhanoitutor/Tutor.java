@@ -12,6 +12,8 @@ public class Tutor {
         if(enabled){
             //perform calculations
             //if wrong move, setValid(false) and return false
+            move.setValid(false);
+            return false;
         }
         move.setValid(true);
         return true;
