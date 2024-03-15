@@ -21,7 +21,7 @@ public class StartGameController {
     private CheckBox tutorCheckBox;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 10, 6, 1);
         ringCounter.setValueFactory(valueFactory);
         valueFactory.setWrapAround(true);
@@ -30,10 +30,9 @@ public class StartGameController {
     @FXML
     private void startGameClicked() throws IOException {
         System.out.println("start game");
-        if(tutorCheckBox.isSelected()){
+        if (tutorCheckBox.isSelected()) {
             Tutor.getInstance().enable();
-        }
-        else{
+        } else {
             Tutor.getInstance().disable();
         }
 
@@ -46,7 +45,9 @@ public class StartGameController {
         gameStage.setScene(scene);
         gameStage.setResizable(false);
         gameStage.show();
-        controller.initRings((int) ringCounter.getValue());
+        int numRings = (int) ringCounter.getValue();
+        controller.initRings(numRings);
+        Tutor.getInstance().calculateMoves(numRings);
 
         Stage current = (Stage) startButton.getScene().getWindow();
         current.close();

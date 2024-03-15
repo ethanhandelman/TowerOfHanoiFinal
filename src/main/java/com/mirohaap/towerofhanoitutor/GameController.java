@@ -23,22 +23,21 @@ public class GameController {
 
 
     @FXML
-    private void initialize(){
+    private void initialize() {
 
 
     }
 
-    public void initRings(int ringCount){
+    public void initRings(int ringCount) {
         //keep only the rings that are needed
-        List<Ring> rings = new ArrayList<>(){{
-            for(int i = 1; i <= 10; i++){
+        List<Ring> rings = new ArrayList<>() {{
+            for (int i = 1; i <= 10; i++) {
                 System.out.println(gamePanel.lookup("#ring" + i));
-                if(i <= ringCount){
+                if (i <= ringCount) {
                     Ring cur = new Ring((StackPane) gamePanel.lookup("#ring" + i), i);
                     cur.getVisualRing().setLayoutY(cur.getVisualRing().getLayoutY() + (29 * (10 - ringCount)));
                     add(cur);
-                }
-                else{
+                } else {
                     gamePanel.getChildren().remove(gamePanel.lookup("#ring" + i));
                 }
             }
@@ -46,9 +45,9 @@ public class GameController {
         Repository.getInstance().init(ringCount);
 
         //adjust tower heights based off ring count
-        if(ringCount < 10){
+        if (ringCount < 10) {
             double adjustment = 29 * (10 - ringCount);
-            for(int i = 1; i < 4; i++){
+            for (int i = 1; i < 4; i++) {
                 Rectangle cur = (Rectangle) gamePanel.lookup("#tower" + i);
                 cur.setHeight(cur.getHeight() - adjustment);
                 cur.setLayoutY(cur.getLayoutY() + adjustment);
@@ -60,17 +59,15 @@ public class GameController {
     }
 
 
-
     @FXML
-    public void onTutorToggled(){
+    public void onTutorToggled() {
 
     }
 
     @FXML
-    public void onRestartButtonClick(){
+    public void onRestartButtonClick() {
 
     }
-
 
 
 }

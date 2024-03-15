@@ -8,6 +8,7 @@ module com.mirohaap.towerofhanoitutor {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.desktop;
+    requires freetts;
 
     opens com.mirohaap.towerofhanoitutor to javafx.fxml;
     exports com.mirohaap.towerofhanoitutor;
