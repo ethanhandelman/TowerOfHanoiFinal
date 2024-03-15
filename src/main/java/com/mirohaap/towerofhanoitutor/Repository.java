@@ -58,6 +58,18 @@ public class Repository {
         changes.firePropertyChange("move", null, move);
     }
 
+    public int getTotalMoveCount(){
+        return moves.size();
+    }
+
+    public int getValidMoveCount(){
+        return (int) moves.stream().filter(m -> m.isValid()).count();
+    }
+
+    public int getInvalidMoveCount(){
+        return (int) moves.stream().filter(m -> !m.isValid()).count();
+    }
+
     public boolean isTop(Integer test){
         for(List<Integer> tower : towers){
             if(!tower.isEmpty() && tower.getLast().equals(test)){
