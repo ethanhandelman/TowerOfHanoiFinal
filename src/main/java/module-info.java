@@ -9,6 +9,8 @@ module com.mirohaap.towerofhanoitutor {
     requires eu.hansolo.tilesfx;
     requires java.desktop;
     requires freetts;
+    requires javafx.swing;
+    requires javafx.media;
 
     opens com.mirohaap.towerofhanoitutor to javafx.fxml;
     exports com.mirohaap.towerofhanoitutor;

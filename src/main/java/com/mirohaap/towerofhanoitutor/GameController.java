@@ -11,14 +11,8 @@ import java.util.Stack;
 
 public class GameController {
     @FXML
-    private StackPane ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10;
-    @FXML
     private AnchorPane gamePanel;
-    @FXML
-    private Rectangle tower1, tower2, tower3;
     private DragDropUtil dragDropUtil;
-
-
     private boolean tutorEnabled;
 
 
@@ -32,7 +26,6 @@ public class GameController {
         //keep only the rings that are needed
         List<Ring> rings = new ArrayList<>() {{
             for (int i = 1; i <= 10; i++) {
-                System.out.println(gamePanel.lookup("#ring" + i));
                 if (i <= ringCount) {
                     Ring cur = new Ring((StackPane) gamePanel.lookup("#ring" + i), i);
                     cur.getVisualRing().setLayoutY(cur.getVisualRing().getLayoutY() + (29 * (10 - ringCount)));
@@ -53,7 +46,6 @@ public class GameController {
                 cur.setLayoutY(cur.getLayoutY() + adjustment);
             }
         }
-        System.out.println(rings);
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
     }

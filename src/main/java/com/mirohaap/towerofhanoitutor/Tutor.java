@@ -24,7 +24,7 @@ public class Tutor {
         // TODO: Cache this result to avoid load times.
         initializeVoice();
         enabled = true;
-        speak("Im here to help!");
+
     }
 
     public void calculateMoves(int numRings) {
@@ -95,6 +95,7 @@ public class Tutor {
     }
 
     public void enable() {
+        speak("Im here to help!");
         enabled = true;
     }
 

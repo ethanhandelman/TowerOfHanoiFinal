@@ -29,17 +29,16 @@ public class StartGameController {
 
     @FXML
     private void startGameClicked() throws IOException {
-        System.out.println("start game");
         if (tutorCheckBox.isSelected()) {
             Tutor.getInstance().enable();
         } else {
             Tutor.getInstance().disable();
         }
-
+        SoundPlayer.getInstance();
         Stage gameStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(Window.class.getResource("game-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 809, 642);
-        GameController controller = (GameController) fxmlLoader.getController();
+        GameController controller = fxmlLoader.getController();
 
         gameStage.setTitle("Tower of Hanoi");
         gameStage.setScene(scene);

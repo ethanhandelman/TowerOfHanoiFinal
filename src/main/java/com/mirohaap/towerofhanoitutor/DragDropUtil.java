@@ -47,7 +47,7 @@ public class DragDropUtil {
         });
 
         ringPane.setOnMouseDragged(e -> {
-            if (!Repository.getInstance().isTop(ring.getNum())) {
+            if (!Repository.getInstance().isTop(ring.getNum())){
                 return;
             }
 
@@ -63,6 +63,7 @@ public class DragDropUtil {
                     projectRect(ringPane, inRange, Color.RED);
                 }
             }
+            ringPane.setViewOrder(-1);
         });
 
         ringPane.setOnMouseReleased(e -> {
@@ -85,16 +86,27 @@ public class DragDropUtil {
                 }
 
                 Repository.getInstance().applyMove(made);
-                refreshTops();
+
+                if(Repository.getInstance().checkWin()){
+                    System.out.println("Winner!");
+                    gamePane.setDisable(true);
+                }
             }
 
             if (made == null || !made.isValid()) {
+                if(inRange != null){
+                    SoundPlayer.getInstance().playWrong();
+                }
                 ringPane.setCursor(Cursor.OPEN_HAND);
                 ringPane.setLayoutX(startX);
                 ringPane.setLayoutY(startY);
             }
+            else{
+                SoundPlayer.getInstance().playPlace();
+            }
 
-            System.out.println(tops);
+            ringPane.setViewOrder(0);
+            refreshTops();
         });
     }
 
@@ -114,11 +126,8 @@ public class DragDropUtil {
 
     private void refreshTops() {
         tops.clear();
-        System.out.println(tops);
         List<Integer> intTops = Repository.getInstance().getTops();
-        System.out.println(intTops);
         for (int i = 0; i < 3; i++) {
-            System.out.println("adding top" + i);
             if (intTops.get(i) == -1) {
                 switch (i) {
                     case 0:
@@ -144,7 +153,6 @@ public class DragDropUtil {
     private SnapRange checkSnapRanges(Ring ring) {
         for (SnapRange top : tops) {
             if (!top.isOwner(ring) && top.inRange(ring.getVisualRing().getLayoutX() + (ring.getVisualRing().getWidth() / 2), ring.getVisualRing().getLayoutY() + (ring.getVisualRing().getHeight() / 2))) {
-                //System.out.println("In range");
                 return top;
             }
         }
