@@ -12,11 +12,8 @@ public class Tutor {
     private static Tutor _instance;
     private boolean enabled;
     private ArrayList<Move> bestMoves = new ArrayList<Move>();
-
     private int moveNumber = 0;
-
     private volatile boolean isSpeaking = false;
-
 
     Voice voice;
 
@@ -40,7 +37,6 @@ public class Tutor {
         voice.setPitch(100);
         voice.setVolume(0.8f);
     }
-
 
     public void speak(String message) {
         if (isSpeaking) {
@@ -71,7 +67,6 @@ public class Tutor {
     }
 
     public boolean validateMove(Move move) {
-
         if (bestMoves.isEmpty()) {
             throw new RuntimeException("Tutor validation called before calculateMoves called!");
         }
@@ -99,10 +94,22 @@ public class Tutor {
         enabled = true;
     }
 
-    public void addBestMove(int n, int from, int to) {
+    public Move getNextMove(){
+        if (bestMoves.isEmpty()) {
+            throw new RuntimeException("Tutor called before calculateMoves called!");
+        }
+
+        moveNumber += 1;
+        return bestMoves.get(moveNumber - 1);
+
+    }
+
+    private void addBestMove(int n, int from, int to) {
         Move move = new Move(n, from, to);
         bestMoves.add(move);
     }
+
+
 
     private void computeBestMoves(int n, int from_rod, int to_rod, int aux_rod) {
         if (n == 1) {
@@ -112,6 +119,18 @@ public class Tutor {
         computeBestMoves(n - 1, from_rod, aux_rod, to_rod);
         addBestMove(n, from_rod, to_rod);
         computeBestMoves(n - 1, aux_rod, to_rod, from_rod);
+    }
+
+    public void revertMove(){
+        if(moveNumber > 0){
+            moveNumber--;
+        }
+        else{
+            throw new RuntimeException("There are no more moves to revert!");
+        }
+    }
+    public int getMoveNumber(){
+        return moveNumber;
     }
 
     public static Tutor getInstance() {

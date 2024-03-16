@@ -3,18 +3,19 @@ package com.mirohaap.towerofhanoitutor;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Repository {
     private static Repository _instance;
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
     //for each tower, [0] is the bottom, last index is the top
     private List<List<Integer>> towers;
-    private List<Move> moves;
+    private Stack<Move> moves;
     private boolean initialized;
 
     private Repository(){
         towers = new ArrayList<>();
-        moves = new ArrayList<>();
+        moves = new Stack<>();
         initialized = false;
     }
 
@@ -62,8 +63,24 @@ public class Repository {
     }
 
     private void logMove(Move move){
-        moves.add(move);
+        moves.push(move);
+        System.out.println(towers);
         changes.firePropertyChange("move", null, move);
+    }
+
+    public Move popLastValidMove(){
+        Move move;
+        do {
+            if(moves.isEmpty()){
+                throw new RuntimeException("No valid moves have been logged yet!");
+            }
+            move = moves.pop();
+        } while(!move.isValid());
+        towers.get(move.getTo() - 1).removeLast();
+        towers.get(move.getFrom() - 1).add(move.getN());
+
+        System.out.println(towers);
+        return move;
     }
 
     public int getTotalMoveCount(){

@@ -11,11 +11,15 @@ public class Move {
     private int to;
     private boolean valid;
 
-    public Move(int n, int from, int to){
+    public Move(int n, int from, int to, boolean valid){
         this.n = n;
         this.from = from;
         this.to = to;
-        valid = false;
+        this.valid = valid;
+    }
+
+    public Move(int n, int from, int to){
+        this(n, from, to, false);
     }
 
     public void setValid(boolean val){
@@ -62,7 +66,7 @@ public class Move {
      * @param from the source rod to set
      * @return the Move object itself for method chaining
      */
-    public Move setFrom(int from) {
+    public Move setFrom(int from){
         this.from = from;
         return this;
     }
@@ -85,6 +89,10 @@ public class Move {
     public Move setTo(int to) {
         this.to = to;
         return this;
+    }
+
+    public Move reversed(){
+        return new Move(n, to, from, valid);
     }
 
     /**
