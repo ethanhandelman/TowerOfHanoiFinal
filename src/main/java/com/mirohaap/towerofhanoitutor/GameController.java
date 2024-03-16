@@ -12,13 +12,16 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
+
     @FXML
     private AnchorPane gamePanel;
     @FXML
@@ -27,6 +30,8 @@ public class GameController {
     private Text secondsDisplay, timeLabel;
     @FXML
     private Button autoPlayButton, backButton, nextButton;
+    @FXML
+    public TextFlow tutorText;
 
     TranslateTransition currentTransition;
     private DragDropUtil dragDropUtil;
@@ -77,12 +82,6 @@ public class GameController {
         }
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
-    }
-
-
-    @FXML
-    public void onTutorToggled() {
-
     }
 
     @FXML
@@ -152,5 +151,10 @@ public class GameController {
         alert.showAndWait();
     }
 
-
+    public void textToDisplay(String message){
+        tutorText.getChildren().clear();
+        Text text = new Text(message);
+        text.setFont(Font.font(20));
+        tutorText.getChildren().add(text);
+    }
 }

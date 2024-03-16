@@ -39,6 +39,7 @@ public class StartGameController {
         FXMLLoader fxmlLoader = new FXMLLoader(Window.class.getResource("game-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 809, 642);
         GameController controller = fxmlLoader.getController();
+        controller.textToDisplay("I'm here to help!");
 
         gameStage.setTitle("Tower of Hanoi");
         gameStage.setScene(scene);
@@ -46,6 +47,7 @@ public class StartGameController {
         gameStage.show();
         int numRings = (int) ringCounter.getValue();
         controller.initRings(numRings);
+        Tutor.getInstance().setController(controller);
         Tutor.getInstance().calculateMoves(numRings);
 
         Stage current = (Stage) startButton.getScene().getWindow();

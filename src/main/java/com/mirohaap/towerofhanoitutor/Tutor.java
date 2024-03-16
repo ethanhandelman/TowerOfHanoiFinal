@@ -2,6 +2,9 @@ package com.mirohaap.towerofhanoitutor;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+import javafx.fxml.FXML;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -14,6 +17,7 @@ public class Tutor {
     private ArrayList<Move> bestMoves = new ArrayList<Move>();
     private int moveNumber = 0;
     private volatile boolean isSpeaking = false;
+    private GameController controller;
 
     Voice voice;
 
@@ -59,6 +63,7 @@ public class Tutor {
         }
         if (!move.equals(bestMoves.get(moveNumber))) {
             speak(bestMoves.get(moveNumber).toString());
+            controller.textToDisplay(bestMoves.get(moveNumber).toString());
             return false;
         }
 
@@ -131,6 +136,9 @@ public class Tutor {
     }
     public int getMoveNumber(){
         return moveNumber;
+    }
+    public void setController(GameController gameController){
+        controller = gameController;
     }
 
     public static Tutor getInstance() {

@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="642.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mirohaap.towerofhanoitutor.GameController">
+<AnchorPane prefHeight="642.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mirohaap.towerofhanoitutor.GameController">
    <children>
       <AnchorPane fx:id="hanoiworld" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="789.0" style="-fx-background-color: #e8d9ca;">
          <children>
@@ -69,7 +69,6 @@
                </children>
             </AnchorPane>
             <Polyline fill="#f2ebe4" layoutX="249.0" layoutY="163.0" points="540.0, -163.0, 340.0, -34.0, -49.0, -34.0, -249.0, -163.0" strokeType="INSIDE" />
-            <TextFlow fx:id="tutorText" layoutX="198.0" prefHeight="129.0" prefWidth="393.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="gamePanel" layoutX="42.0" layoutY="43.0" prefHeight="360.0" prefWidth="730.0">
@@ -142,5 +141,6 @@
             </StackPane>
          </children>
       </AnchorPane>
+      <TextFlow fx:id="tutorText" layoutX="182.0" layoutY="38.0" prefHeight="75.0" prefWidth="450.0" textAlignment="CENTER" />
    </children>
 </AnchorPane>
