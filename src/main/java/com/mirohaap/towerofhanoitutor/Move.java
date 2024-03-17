@@ -102,7 +102,7 @@ public class Move {
      */
     @Override
     public String toString() {
-        return "Move ring " + getN() + " from " + getFrom() + " to " + getTo();
+        return "Move ring " + getN() + " from tower " + getFrom() + " to tower " + getTo();
     }
 
     /**

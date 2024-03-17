@@ -4,30 +4,53 @@ import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 
+/**
+ * The {@code Tutor} class represents a tutor for the Tower of Hanoi puzzle,
+ * offering guidance through the puzzle by calculating and providing the best moves.
+ * This class utilizes the FreeTTS library to vocalize instructions or feedback
+ * to the user. It implements a singleton pattern to ensure only one instance of
+ * the tutor is active at any time.
+ * <p>
+ * The class calculates the optimal move sequence for a given number of rings and
+ * provides real-time feedback to the user about the correctness of their moves.
+ * Vocal feedback is provided through a text-to-speech engine, aiming to guide the
+ * user to the solution with auditory cues.
+ * </p>
+ */
 public class Tutor {
-    //dummy tutor class, all moves are validated
-    private static Tutor _instance;
-    private boolean enabled;
-    private ArrayList<Move> bestMoves = new ArrayList<Move>();
-    private int moveNumber = 0;
-    private volatile boolean isSpeaking = false;
+    private static Tutor _instance; // Singleton instance of the Tutor
+    private boolean enabled = false; // Flag to enable or disable tutor feedback
+    private ArrayList<Move> bestMoves = new ArrayList<>(); // List of calculated best moves
+    private int moveNumber = 0; // Index for the current move in the bestMoves list
+    private volatile boolean isSpeaking = false; // Flag to prevent overlapping speech threads
+    Voice voice; // Voice object for text-to-speech functionality
 
-    Voice voice;
+    /**
+     * Private constructor for the Tutor class.
+     * Initializes the text-to-speech engine and vocalizes an introductory message.
+     * This constructor is private to enforce the singleton pattern.
+     */
 
     private Tutor() {
-        // TODO: Cache this result to avoid load times.
         initializeVoice();
-        enabled = true;
-
     }
 
+    /**
+     * Calculates the optimal sequence of moves for solving the Tower of Hanoi puzzle
+     * with a specified number of rings.
+     *
+     * @param numRings the number of rings in the Tower of Hanoi puzzle
+     */
     public void calculateMoves(int numRings) {
         computeBestMoves(numRings, 1, 3, 2);
     }
 
+    /**
+     * Initializes the FreeTTS voice manager and selects a specific voice for speech synthesis.
+     * This method sets various parameters to customize the voice's pitch, rate, and volume.
+     */
     private void initializeVoice() {
         VoiceManager voiceManager = VoiceManager.getInstance();
         System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
@@ -37,6 +60,15 @@ public class Tutor {
         voice.setPitch(100);
         voice.setVolume(0.8f);
     }
+
+
+    /**
+     * Provides auditory feedback to the user by vocalizing a given message.
+     * If the tutor is already speaking, subsequent calls to this method will be ignored
+     * to prevent overlapping speech.
+     *
+     * @param message the message to be vocalized
+     */
 
     public void speak(String message) {
         if (isSpeaking) {
@@ -53,6 +85,13 @@ public class Tutor {
         }).start();
     }
 
+    /**
+     * Checks if a given move is the best move according to the pre-calculated sequence.
+     * If the move is not the best move, it provides vocal feedback indicating the correct move.
+     *
+     * @param move the move made by the user
+     * @return {@code true} if the move is the best move, {@code false} otherwise
+     */
     public boolean isBestMove(Move move) {
         if (!enabled) {
             return true;
@@ -66,14 +105,16 @@ public class Tutor {
         return true;
     }
 
+    /**
+     * Validates a move made by the user against the pre-calculated best moves.
+     * The validation result is also set in the move object.
+     *
+     * @param move the move to validate
+     * @return {@code true} if the move is valid, {@code false} otherwise
+     */
     public boolean validateMove(Move move) {
         if (bestMoves.isEmpty()) {
             throw new RuntimeException("Tutor validation called before calculateMoves called!");
-        }
-
-        if (!enabled) {
-            move.setValid(true);
-            return true;
         }
 
         boolean moveStatus = isBestMove(move);
@@ -81,20 +122,45 @@ public class Tutor {
         return moveStatus;
     }
 
+    /**
+     * Returns whether the tutor is currently enabled.
+     *
+     * @return {@code true} if the tutor is enabled, {@code false} otherwise
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Disables the tutor, preventing it from providing feedback.
+     */
     public void disable() {
         enabled = false;
     }
 
+    /**
+     * Enables the tutor, allowing it to provide feedback.
+     */
     public void enable() {
         speak("Im here to help!");
         enabled = true;
+        speak("Im here to help! Play when you are ready!");
     }
 
-    public Move getNextMove(){
+
+    /**
+     * Adds a best move to the sequence of best moves for solving the puzzle.
+     *
+     * @param n    the number of the ring being moved
+     * @param from the starting rod
+     * @param to   the destination rod
+     */
+    public void addBestMove(int n, int from, int to) {
+        Move move = new Move(n, from, to);
+        bestMoves.add(move);
+    }
+  
+  public Move getNextMove(){
         if (bestMoves.isEmpty()) {
             throw new RuntimeException("Tutor called before calculateMoves called!");
         }
@@ -104,12 +170,16 @@ public class Tutor {
 
     }
 
-    private void addBestMove(int n, int from, int to) {
-        Move move = new Move(n, from, to);
-        bestMoves.add(move);
-    }
 
-
+    /**
+     * Recursively computes the optimal sequence of moves for solving the Tower of Hanoi puzzle.
+     * This method is called internally by {@code calculateMoves}.
+     *
+     * @param n        the number of rings to move
+     * @param from_rod the starting rod
+     * @param to_rod   the destination rod
+     * @param aux_rod  the auxiliary rod
+     */
 
     private void computeBestMoves(int n, int from_rod, int to_rod, int aux_rod) {
         if (n == 1) {
@@ -129,10 +199,17 @@ public class Tutor {
             throw new RuntimeException("There are no more moves to revert!");
         }
     }
+  
     public int getMoveNumber(){
         return moveNumber;
     }
 
+      /**
+     * Returns the singleton instance of the Tutor class.
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of the Tutor
+     */
     public static Tutor getInstance() {
         if (_instance == null) {
             _instance = new Tutor();
