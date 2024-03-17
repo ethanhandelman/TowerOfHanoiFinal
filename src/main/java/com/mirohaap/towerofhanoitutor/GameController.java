@@ -136,6 +136,9 @@ public class GameController {
         dragDropUtil.disableUserInput();
         Move last = Repository.getInstance().popLastValidMove();
         Tutor.getInstance().revertMove();
+        int from = last.getTo();
+        last.setTo(last.getFrom());
+        last.setFrom(from);
         currentTransition = dragDropUtil.animateMove(last, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
 
     }
