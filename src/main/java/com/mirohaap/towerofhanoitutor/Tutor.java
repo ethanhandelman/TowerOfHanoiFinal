@@ -32,6 +32,7 @@ public class Tutor {
      * Initializes the text-to-speech engine and vocalizes an introductory message.
      * This constructor is private to enforce the singleton pattern.
      */
+
     private Tutor() {
         initializeVoice();
     }
@@ -60,6 +61,7 @@ public class Tutor {
         voice.setVolume(0.8f);
     }
 
+
     /**
      * Provides auditory feedback to the user by vocalizing a given message.
      * If the tutor is already speaking, subsequent calls to this method will be ignored
@@ -67,6 +69,7 @@ public class Tutor {
      *
      * @param message the message to be vocalized
      */
+
     public void speak(String message) {
         if (isSpeaking) {
             return;
@@ -144,6 +147,7 @@ public class Tutor {
         speak("Im here to help! Play when you are ready!");
     }
 
+
     /**
      * Adds a best move to the sequence of best moves for solving the puzzle.
      *
@@ -155,6 +159,17 @@ public class Tutor {
         Move move = new Move(n, from, to);
         bestMoves.add(move);
     }
+  
+  public Move getNextMove(){
+        if (bestMoves.isEmpty()) {
+            throw new RuntimeException("Tutor called before calculateMoves called!");
+        }
+
+        moveNumber += 1;
+        return bestMoves.get(moveNumber - 1);
+
+    }
+
 
     /**
      * Recursively computes the optimal sequence of moves for solving the Tower of Hanoi puzzle.
@@ -165,6 +180,7 @@ public class Tutor {
      * @param to_rod   the destination rod
      * @param aux_rod  the auxiliary rod
      */
+
     private void computeBestMoves(int n, int from_rod, int to_rod, int aux_rod) {
         if (n == 1) {
             addBestMove(1, from_rod, to_rod);
@@ -175,7 +191,20 @@ public class Tutor {
         computeBestMoves(n - 1, aux_rod, to_rod, from_rod);
     }
 
-    /**
+    public void revertMove(){
+        if(moveNumber > 0){
+            moveNumber--;
+        }
+        else{
+            throw new RuntimeException("There are no more moves to revert!");
+        }
+    }
+  
+    public int getMoveNumber(){
+        return moveNumber;
+    }
+
+      /**
      * Returns the singleton instance of the Tutor class.
      * If the instance does not exist, it is created.
      *
