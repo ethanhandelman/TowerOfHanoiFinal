@@ -2,6 +2,9 @@ package com.mirohaap.towerofhanoitutor;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+import javafx.fxml.FXML;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 
@@ -20,6 +23,7 @@ import java.util.ArrayList;
  * </p>
  */
 public class Tutor {
+
     private static Tutor _instance; // Singleton instance of the Tutor
     private boolean enabled = false; // Flag to enable or disable tutor feedback
     private ArrayList<Move> bestMoves = new ArrayList<>(); // List of calculated best moves
@@ -32,6 +36,7 @@ public class Tutor {
      * Initializes the text-to-speech engine and vocalizes an introductory message.
      * This constructor is private to enforce the singleton pattern.
      */
+
 
     private Tutor() {
         initializeVoice();
@@ -98,6 +103,7 @@ public class Tutor {
         }
         if (!move.equals(bestMoves.get(moveNumber))) {
             speak(bestMoves.get(moveNumber).toString());
+            controller.textToDisplay(bestMoves.get(moveNumber).toString());
             return false;
         }
 
@@ -202,6 +208,9 @@ public class Tutor {
   
     public int getMoveNumber(){
         return moveNumber;
+    }
+    public void setController(GameController gameController){
+        controller = gameController;
     }
 
       /**
