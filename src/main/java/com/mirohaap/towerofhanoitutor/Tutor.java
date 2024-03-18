@@ -100,7 +100,6 @@ public class Tutor {
             speak(bestMoves.get(moveNumber).toString());
             return false;
         }
-
         moveNumber += 1;
         return true;
     }
@@ -215,5 +214,13 @@ public class Tutor {
             _instance = new Tutor();
         }
         return _instance;
+    }
+
+    /**
+     *
+     * @return List of calculated optimal moves
+     */
+    public ArrayList<Move> getBestMoves() {
+        return bestMoves;
     }
 }

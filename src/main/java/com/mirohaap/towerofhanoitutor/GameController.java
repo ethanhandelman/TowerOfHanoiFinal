@@ -15,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class GameController {
     @FXML
     private Text secondsDisplay, timeLabel;
     @FXML
-    private Button autoPlayButton, backButton, nextButton;
+    private Button autoPlayButton, backButton, nextButton, analyticsButton;
+
 
     TranslateTransition currentTransition;
     private DragDropUtil dragDropUtil;
@@ -127,6 +129,12 @@ public class GameController {
             autoPlayButton.setDisable(true);
             dragDropUtil.disableUserInput();
         }
+    }
+
+    @FXML
+    public void showAnalytics() throws IOException {
+        AnalyticsWindow aw = new AnalyticsWindow();
+        aw.openWindow();
     }
 
     @FXML

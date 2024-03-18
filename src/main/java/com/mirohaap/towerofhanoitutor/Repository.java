@@ -11,12 +11,15 @@ public class Repository {
     //for each tower, [0] is the bottom, last index is the top
     private List<List<Integer>> towers;
     private Stack<Move> moves;
+    private ArrayList<Boolean> optimalMoves = new ArrayList<>();
     private boolean initialized;
+    private long startTime;
 
     private Repository(){
         towers = new ArrayList<>();
         moves = new Stack<>();
         initialized = false;
+        startTime = System.currentTimeMillis();
     }
 
     public void init(int ringCount){
@@ -37,6 +40,10 @@ public class Repository {
         throw new IndexOutOfBoundsException("Towers must be referenced using indexes 0, 1, or 2.");
     }
 
+    public long calculateElapsedTime() {
+        return System.currentTimeMillis() - startTime;
+    }
+
     public List<Integer> getTops(){
         List<Integer> tops = new ArrayList<>();
         for(List<Integer> tower : towers){
@@ -48,6 +55,15 @@ public class Repository {
             }
         }
         return tops;
+    }
+
+    public void verifyOptimal(Move move) {
+        ArrayList<Move> bestMoves = Tutor.getInstance().getBestMoves();
+        if (bestMoves.get(Tutor.getInstance().getMoveNumber()-1).equals(move)) {
+            optimalMoves.add(true);
+        } else {
+            optimalMoves.add(false);
+        }
     }
 
     public void applyMove(Move move){
@@ -64,6 +80,9 @@ public class Repository {
 
     private void logMove(Move move){
         moves.push(move);
+        if (Tutor.getInstance().isEnabled()) {
+            verifyOptimal(move);
+        }
         System.out.println(towers);
         changes.firePropertyChange("move", null, move);
     }
@@ -81,6 +100,12 @@ public class Repository {
 
         System.out.println(towers);
         return move;
+    }
+
+
+
+    public Stack<Move> getMoves() {
+        return moves;
     }
 
     public int getTotalMoveCount(){
@@ -123,5 +148,9 @@ public class Repository {
             throw new RuntimeException("Repository accessed before being initialized");
         }
         return _instance;
+    }
+
+    public ArrayList<Boolean> getOptimalMoves() {
+        return optimalMoves;
     }
 }

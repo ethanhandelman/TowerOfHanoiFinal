@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mirohaap.towerofhanoitutor.AnalyticsWindow">
+   <children>
+       <Text fx:id="tutorText" layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="179.13000106811523" />
+      <Text fx:id="optimalText" layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="179.13000106811523" />
+      <Text fx:id="unoptimalText" layoutX="14.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="timeText" layoutX="14.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <LineChart layoutX="150.0" layoutY="67.0" prefHeight="329.0" prefWidth="436.0" title="Optimal Moves Over Time">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+   </children>
+</AnchorPane>
