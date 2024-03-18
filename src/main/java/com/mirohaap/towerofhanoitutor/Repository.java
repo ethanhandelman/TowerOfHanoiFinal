@@ -1,11 +1,12 @@
 package com.mirohaap.towerofhanoitutor;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class Repository {
+public class Repository{
     private static Repository _instance;
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
     //for each tower, [0] is the bottom, last index is the top
@@ -17,6 +18,10 @@ public class Repository {
         towers = new ArrayList<>();
         moves = new Stack<>();
         initialized = false;
+    }
+
+    public void addListener(PropertyChangeListener listener){
+        changes.addPropertyChangeListener(listener);
     }
 
     public void init(int ringCount){
@@ -76,6 +81,8 @@ public class Repository {
             }
             move = moves.pop();
         } while(!move.isValid());
+
+        System.out.println("Popped " + move);
         towers.get(move.getTo() - 1).removeLast();
         towers.get(move.getFrom() - 1).add(move.getN());
 

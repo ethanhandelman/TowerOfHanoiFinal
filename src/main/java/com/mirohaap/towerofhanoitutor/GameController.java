@@ -2,7 +2,6 @@ package com.mirohaap.towerofhanoitutor;
 
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -17,10 +16,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameController {
+public class GameController implements PropertyChangeListener {
 
     @FXML
     private AnchorPane gamePanel;
@@ -54,6 +55,8 @@ public class GameController {
                 speedSlider.valueProperty()
         ));
 
+
+
     }
 
     public void initRings(int ringCount) {
@@ -82,6 +85,7 @@ public class GameController {
         }
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
+        Repository.getInstance().addListener(this);
     }
 
     @FXML
@@ -136,11 +140,13 @@ public class GameController {
         dragDropUtil.disableUserInput();
         Move last = Repository.getInstance().popLastValidMove();
         Tutor.getInstance().revertMove();
-        int from = last.getTo();
-        last.setTo(last.getFrom());
-        last.setFrom(from);
-        currentTransition = dragDropUtil.animateMove(last, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
 
+        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+
+    }
+
+    public void propertyChange(PropertyChangeEvent evt){
+        System.out.println("move made" + (Move) evt.getNewValue());
     }
 
     private void allowInteractions(boolean canInteract){

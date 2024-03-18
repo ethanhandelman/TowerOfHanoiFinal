@@ -2,9 +2,6 @@ package com.mirohaap.towerofhanoitutor;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
-import javafx.fxml.FXML;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 
@@ -29,6 +26,7 @@ public class Tutor {
     private ArrayList<Move> bestMoves = new ArrayList<>(); // List of calculated best moves
     private int moveNumber = 0; // Index for the current move in the bestMoves list
     private volatile boolean isSpeaking = false; // Flag to prevent overlapping speech threads
+    private GameController controller;
     Voice voice; // Voice object for text-to-speech functionality
 
     /**
@@ -209,6 +207,7 @@ public class Tutor {
     public int getMoveNumber(){
         return moveNumber;
     }
+
     public void setController(GameController gameController){
         controller = gameController;
     }
