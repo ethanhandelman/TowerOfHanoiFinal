@@ -1,5 +1,7 @@
 package com.mirohaap.towerofhanoitutor;
 
+import javafx.fxml.FXML;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ public class Repository{
     private List<List<Integer>> towers;
     private Stack<Move> moves;
     private boolean initialized;
+
+
 
     private Repository(){
         towers = new ArrayList<>();
@@ -64,7 +68,8 @@ public class Repository{
     }
 
     public boolean checkWin(){
-        return (towers.getFirst().isEmpty() && towers.getLast().isEmpty()) || (towers.getFirst().isEmpty() && towers.get(1).isEmpty());
+      return (towers.getFirst().isEmpty() && towers.getLast().isEmpty()) || (towers.getFirst().isEmpty() && towers.get(1).isEmpty());
+
     }
 
     private void logMove(Move move){
@@ -131,4 +136,18 @@ public class Repository{
         }
         return _instance;
     }
+
+
+    public void reset(){
+        if(!initialized){
+            throw new IllegalStateException("Repository must be initalized");
+        }
+        towers.clear();
+        moves.clear();
+        changes.firePropertyChange("reset", null, null);
+    }
+
+
+
+
 }

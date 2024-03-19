@@ -14,10 +14,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class GameController implements PropertyChangeListener {
     TranslateTransition currentTransition;
     private DragDropUtil dragDropUtil;
     private AutoPlayUtil autoPlayUtil;
+
+    private Window window;
 
     @FXML
     private void initialize() {
@@ -90,6 +94,11 @@ public class GameController implements PropertyChangeListener {
 
     @FXML
     public void onRestartButtonClick() {
+        // Close current Game Window
+        Stage currentGameStage = (Stage) autoPlayButton.getScene().getWindow();
+        currentGameStage.close();
+
+        // Open initial game setup window
 
     }
 
@@ -112,38 +121,38 @@ public class GameController implements PropertyChangeListener {
     }
 
     @FXML
-    public void stepForward(){
-        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
-            return;
-        }
-        dragDropUtil.disableUserInput();
-        Move next = Tutor.getInstance().getNextMove();
-        next.setValid(true);
-        Repository.getInstance().applyMove(next);
-        currentTransition = dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
-
-
-        if(Repository.getInstance().checkWin()){
-            System.out.println("Autoplay won!");
-            allowInteractions(false);
-            autoPlayButton.setText("AutoPlay");
-            autoPlayButton.setDisable(true);
-            dragDropUtil.disableUserInput();
-        }
-    }
-
-    @FXML
-    public void stepBack(){
-        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
-            return;
-        }
-        dragDropUtil.disableUserInput();
-        Move last = Repository.getInstance().popLastValidMove();
-        Tutor.getInstance().revertMove();
-
-        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
-
-    }
+//    public void stepForward(){
+//        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
+//            return;
+//        }
+//        dragDropUtil.disableUserInput();
+//        Move next = Tutor.getInstance().getNextMove();
+//        next.setValid(true);
+//        Repository.getInstance().applyMove(next);
+//        currentTransition = dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+//
+//
+////        if(Repository.getInstance().checkWin()){
+////            System.out.println("Autoplay won!");
+////            allowInteractions(false);
+////            autoPlayButton.setText("AutoPlay");
+////            autoPlayButton.setDisable(true);
+////            dragDropUtil.disableUserInput();
+//        }
+//    }
+//
+////    @FXML
+////    public void stepBack(){
+////        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
+////            return;
+////        }
+////        dragDropUtil.disableUserInput();
+////        Move last = Repository.getInstance().popLastValidMove();
+////        Tutor.getInstance().revertMove();
+////
+////        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+////
+////    }
 
     public void propertyChange(PropertyChangeEvent evt){
         System.out.println("move made" + (Move) evt.getNewValue());
@@ -166,4 +175,15 @@ public class GameController implements PropertyChangeListener {
         text.setFont(Font.font(20));
         tutorText.getChildren().add(text);
     }
+
+    public void setWindow(Window window){
+        this.window = window;
+    }
+
+
+    @FXML
+    public void onRestartButtonCLick() throws IOException{
+        window.resetGame();
+    }
+
 }
