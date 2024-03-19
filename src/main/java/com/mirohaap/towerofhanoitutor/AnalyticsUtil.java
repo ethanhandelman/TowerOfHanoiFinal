@@ -26,18 +26,6 @@ public class AnalyticsUtil {
     }
 
     private void calculateValues() {
-      /*  if (!fetchPreviousAnalyticData()) {  // opens file, checks to see if the existing file was found or if it was created
-            optimalMoves = fetchNumberOfMovesFromCurrentSession(true);
-            unoptimalMoves = fetchNumberOfMovesFromCurrentSession(false);
-            elapsedTime = fetchInGameTimeFromCurrentSession();
-        } else if (!openedThisSession) {
-            optimalMoves = previous fetchNumberOfMovesFromCurrentSession(true);
-            unoptimalMoves += fetchNumberOfMovesFromCurrentSession(false);
-            elapsedTime += fetchInGameTimeFromCurrentSession();
-            openedThisSession = true;
-        } else {
-
-        } */
         optimalMoves = previousOptimalMoves + fetchNumberOfMovesFromCurrentSession(true);
         unoptimalMoves = previousUnoptimalMoves + fetchNumberOfMovesFromCurrentSession(false);
         elapsedTime = previousElapsedTime + fetchInGameTimeFromCurrentSession();
@@ -101,8 +89,8 @@ public class AnalyticsUtil {
             myWriter.write("\n");
             myWriter.write(Integer.toString((int)elapsedTime));
             myWriter.write("\n");
-            for (Integer i : optimalMovesOverTime) {
-                myWriter.write(i);
+            for (Integer in : optimalMovesOverTime) {
+                myWriter.write(Integer.toString(in));
                 myWriter.write("\n");
             }
             myWriter.close();
@@ -112,16 +100,20 @@ public class AnalyticsUtil {
         }
     }
 
+    public void logOptimalMoves() {
+        optimalMovesOverTime.add(optimalMoves);
+    }
+
     private int fetchNumberOfMovesFromCurrentSession(boolean moveOptimality) {
         int count = 0;
         ArrayList<Boolean> moves = Repository.getInstance().getOptimalMoves();
-        for (Boolean bool : moves) {
+        for (Boolean optimal : moves) {
             if (moveOptimality) {
-                if (bool) {
+                if (optimal) {
                     ++count;
                 }
             } else {
-                if (!bool) {
+                if (!optimal) {
                     ++count;
                 }
             }
@@ -139,6 +131,10 @@ public class AnalyticsUtil {
 
     public int getNumberOfUnoptimalMoves() {
         return unoptimalMoves;
+    }
+
+    public ArrayList<Integer> getOptimalMovesOverTime() {
+        return optimalMovesOverTime;
     }
 
     public long getElapsedTime() {
