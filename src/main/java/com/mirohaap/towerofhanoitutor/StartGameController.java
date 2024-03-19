@@ -20,6 +20,8 @@ public class StartGameController {
     @FXML
     private CheckBox tutorCheckBox;
 
+    private Window window;
+
     @FXML
     private void initialize() {
         SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 10, 6, 1);
@@ -39,6 +41,7 @@ public class StartGameController {
         FXMLLoader fxmlLoader = new FXMLLoader(Window.class.getResource("game-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 809, 642);
         GameController controller = fxmlLoader.getController();
+        controller.setWindow(window);
         controller.textToDisplay("I'm here to help!");
 
         gameStage.setTitle("Tower of Hanoi");
@@ -53,5 +56,11 @@ public class StartGameController {
         Stage current = (Stage) startButton.getScene().getWindow();
         current.close();
     }
+
+    @FXML
+    public void setWindow(Window window){
+        this.window = window;
+    }
+
 
 }
