@@ -1,8 +1,5 @@
 package com.mirohaap.towerofhanoitutor;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
 public class SnapRange {
     private final double ogX, ogY;
     private double maxX, maxY, minX, minY;

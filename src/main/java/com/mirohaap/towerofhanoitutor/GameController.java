@@ -2,7 +2,6 @@ package com.mirohaap.towerofhanoitutor;
 
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -12,14 +11,20 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameController {
+public class GameController implements PropertyChangeListener {
+
     @FXML
     private AnchorPane gamePanel;
     @FXML
@@ -27,12 +32,14 @@ public class GameController {
     @FXML
     private Text secondsDisplay, timeLabel;
     @FXML
-    private Button autoPlayButton, backButton, nextButton, analyticsButton;
-
+    private Button autoPlayButton, backButton, nextButton;
+    @FXML
+    public TextFlow tutorText;
 
     TranslateTransition currentTransition;
     private DragDropUtil dragDropUtil;
     private AutoPlayUtil autoPlayUtil;
+    private Window window;
 
     @FXML
     private void initialize() {
@@ -50,6 +57,8 @@ public class GameController {
                 "%.2f",
                 speedSlider.valueProperty()
         ));
+
+
 
     }
 
@@ -79,17 +88,22 @@ public class GameController {
         }
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
-    }
-
-
-    @FXML
-    public void onTutorToggled() {
-
+        Repository.getInstance().addListener(this);
     }
 
     @FXML
-    public void onRestartButtonClick() {
+    public void onRestartButtonClick() throws IOException {
+        // Close current Game Window
+        Stage currentGameStage = (Stage) autoPlayButton.getScene().getWindow();
+        currentGameStage.close();
+        // Open new game window
+        Window.getInstance().resetGame();
+    }
 
+    @FXML
+    public void showAnalytics() throws IOException {
+        AnalyticsWindow aw = new AnalyticsWindow();
+        aw.openWindow();
     }
 
     @FXML
@@ -132,12 +146,6 @@ public class GameController {
     }
 
     @FXML
-    public void showAnalytics() throws IOException {
-        AnalyticsWindow aw = new AnalyticsWindow();
-        aw.openWindow();
-    }
-
-    @FXML
     public void stepBack(){
         if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
             return;
@@ -145,8 +153,13 @@ public class GameController {
         dragDropUtil.disableUserInput();
         Move last = Repository.getInstance().popLastValidMove();
         Tutor.getInstance().revertMove();
-        currentTransition = dragDropUtil.animateMove(last, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
 
+        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+
+    }
+
+    public void propertyChange(PropertyChangeEvent evt){
+        System.out.println("move made" + (Move) evt.getNewValue());
     }
 
     private void allowInteractions(boolean canInteract){
@@ -160,5 +173,20 @@ public class GameController {
         alert.showAndWait();
     }
 
+    public void textToDisplay(String message){
+        tutorText.getChildren().clear();
+        Text text = new Text(message);
+        text.setFont(Font.font(20));
+        tutorText.getChildren().add(text);
+    }
 
+    public void setWindow(Window window){
+        this.window = window;
+    }
+
+
+    @FXML
+    public void onRestartButtonCLick() throws IOException{
+        window.resetGame();
+    }
 }

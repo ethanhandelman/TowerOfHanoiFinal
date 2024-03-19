@@ -20,11 +20,13 @@ import java.util.ArrayList;
  * </p>
  */
 public class Tutor {
+
     private static Tutor _instance; // Singleton instance of the Tutor
     private boolean enabled = false; // Flag to enable or disable tutor feedback
     private ArrayList<Move> bestMoves = new ArrayList<>(); // List of calculated best moves
     private int moveNumber = 0; // Index for the current move in the bestMoves list
     private volatile boolean isSpeaking = false; // Flag to prevent overlapping speech threads
+    private GameController controller;
     Voice voice; // Voice object for text-to-speech functionality
 
     /**
@@ -32,6 +34,7 @@ public class Tutor {
      * Initializes the text-to-speech engine and vocalizes an introductory message.
      * This constructor is private to enforce the singleton pattern.
      */
+
 
     private Tutor() {
         initializeVoice();
@@ -98,8 +101,10 @@ public class Tutor {
         }
         if (!move.equals(bestMoves.get(moveNumber))) {
             speak(bestMoves.get(moveNumber).toString());
+            controller.textToDisplay(bestMoves.get(moveNumber).toString());
             return false;
         }
+
         moveNumber += 1;
         return true;
     }
@@ -203,6 +208,10 @@ public class Tutor {
         return moveNumber;
     }
 
+    public void setController(GameController gameController){
+        controller = gameController;
+    }
+
       /**
      * Returns the singleton instance of the Tutor class.
      * If the instance does not exist, it is created.
@@ -216,10 +225,6 @@ public class Tutor {
         return _instance;
     }
 
-    /**
-     *
-     * @return List of calculated optimal moves
-     */
     public ArrayList<Move> getBestMoves() {
         return bestMoves;
     }

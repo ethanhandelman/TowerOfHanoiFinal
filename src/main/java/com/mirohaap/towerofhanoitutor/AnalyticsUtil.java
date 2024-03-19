@@ -5,9 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class AnalyticsUtil {
     private int previousOptimalMoves = 0;
