@@ -146,7 +146,6 @@ public class Tutor {
      * Enables the tutor, allowing it to provide feedback.
      */
     public void enable() {
-        speak("Im here to help!");
         enabled = true;
         speak("Im here to help! Play when you are ready!");
     }
@@ -212,9 +211,11 @@ public class Tutor {
         controller = gameController;
     }
 
+
     public boolean movesLeft(){
         return !(moveNumber == bestMoves.size());
     }
+
 
       /**
      * Returns the singleton instance of the Tutor class.
@@ -227,5 +228,13 @@ public class Tutor {
             _instance = new Tutor();
         }
         return _instance;
+    }
+
+    public boolean movesLeft(){
+        return !(moveNumber == bestMoves.size());
+    }
+
+    public ArrayList<Move> getBestMoves() {
+        return bestMoves;
     }
 }

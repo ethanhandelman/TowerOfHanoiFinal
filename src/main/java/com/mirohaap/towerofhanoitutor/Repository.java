@@ -11,13 +11,34 @@ public class Repository{
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
     //for each tower, [0] is the bottom, last index is the top
     private List<List<Integer>> towers;
+    private ArrayList<Boolean> optimalMoves = new ArrayList<>();
     private Stack<Move> moves;
     private boolean initialized;
+    private long startTime;
 
     private Repository(){
         towers = new ArrayList<>();
         moves = new Stack<>();
         initialized = false;
+        startTime = System.currentTimeMillis();
+
+    }
+
+    public void verifyOptimal(Move move) {
+        ArrayList<Move> bestMoves = Tutor.getInstance().getBestMoves();
+        if (bestMoves.get(Tutor.getInstance().getMoveNumber()-1).equals(move)) {
+            optimalMoves.add(true);
+        } else {
+            optimalMoves.add(false);
+        }
+    }
+
+    public long calculateElapsedTime() {
+        return System.currentTimeMillis() - startTime;
+    }
+
+    public void addListener(PropertyChangeListener listener){
+        changes.addPropertyChangeListener(listener);
     }
 
     public void addListener(PropertyChangeListener listener){
@@ -108,6 +129,10 @@ public class Repository{
         return (int) moves.stream().filter(m -> !m.isValid()).count();
     }
 
+    public Stack<Move> getMoves() {
+        return moves;
+    }
+
     public boolean isTop(Integer test){
         for(List<Integer> tower : towers){
             if(!tower.isEmpty() && tower.getLast().equals(test)){
@@ -128,6 +153,7 @@ public class Repository{
         return -1;
     }
 
+
     public static Repository getInstance(){
         if(_instance == null){
             _instance = new Repository();
@@ -136,5 +162,18 @@ public class Repository{
             throw new RuntimeException("Repository accessed before being initialized");
         }
         return _instance;
+    }
+
+    public void reset() {
+        if(!initialized){
+            throw new IllegalStateException("Repository must be initalized");
+        }
+        towers.clear();
+        moves.clear();
+        changes.firePropertyChange("reset", null, null);
+    }
+
+    public ArrayList<Boolean> getOptimalMoves() {
+        return optimalMoves;
     }
 }

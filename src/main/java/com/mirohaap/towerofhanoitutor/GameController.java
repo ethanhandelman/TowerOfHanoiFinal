@@ -14,10 +14,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import javafx.stage.Stage;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +42,7 @@ public class GameController implements PropertyChangeListener {
 
     private DragDropUtil dragDropUtil;
     private AutoPlayUtil autoPlayUtil;
+    private Window window;
 
     @FXML
     private void initialize() {
@@ -52,9 +59,11 @@ public class GameController implements PropertyChangeListener {
 
         secondsDisplay.textProperty().bind(
                 Bindings.format(
-                "%.2f",
-                speedSlider.valueProperty()
-        ));
+                        "%.2f",
+                        speedSlider.valueProperty()
+                ));
+
+
 
 
 
@@ -88,11 +97,23 @@ public class GameController implements PropertyChangeListener {
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
         Repository.getInstance().addListener(this);
         AnimationRepository.getInstance().addListener(this);
+
     }
 
     @FXML
-    public void onRestartButtonClick() {
+    public void onRestartButtonClick() throws IOException {
+        // Close current Game Window
+        Stage currentGameStage = (Stage) autoPlayButton.getScene().getWindow();
+        currentGameStage.close();
+        // Open new game window
+        Window.getInstance().resetGame();
 
+    }
+
+    @FXML
+    public void showAnalytics() throws IOException {
+        AnalyticsWindow aw = new AnalyticsWindow();
+        aw.openWindow();
     }
 
     @FXML
@@ -140,7 +161,8 @@ public class GameController implements PropertyChangeListener {
         Move last = Repository.getInstance().popLastValidMove();
         Tutor.getInstance().revertMove();
 
-        dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(false));
+        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+
     }
 
     public void propertyChange(PropertyChangeEvent evt){
@@ -189,6 +211,7 @@ public class GameController implements PropertyChangeListener {
         else{
             dragDropUtil.allowUserInput(!Repository.getInstance().checkWin());
         }
+
     }
 
     private void allowInteractions(boolean canInteract){
@@ -208,4 +231,16 @@ public class GameController implements PropertyChangeListener {
         text.setFont(Font.font(20));
         tutorText.getChildren().add(text);
     }
+
+
+    public void setWindow(Window window){
+        this.window = window;
+    }
+
+
+    @FXML
+    public void onRestartButtonCLick() throws IOException{
+        window.resetGame();
+    }
+
 }
