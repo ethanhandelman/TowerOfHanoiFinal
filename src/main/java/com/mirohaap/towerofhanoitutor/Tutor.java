@@ -211,6 +211,12 @@ public class Tutor {
         controller = gameController;
     }
 
+
+    public boolean movesLeft(){
+        return !(moveNumber == bestMoves.size());
+    }
+
+
       /**
      * Returns the singleton instance of the Tutor class.
      * If the instance does not exist, it is created.

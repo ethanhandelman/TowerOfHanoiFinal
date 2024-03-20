@@ -39,6 +39,7 @@ public class StartGameController {
         FXMLLoader fxmlLoader = new FXMLLoader(Window.class.getResource("game-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 809, 642);
         GameController controller = fxmlLoader.getController();
+
         if (tutorCheckBox.isSelected()) {
             controller.textToDisplay("I'm here to help! Play when you are ready!");
         }
