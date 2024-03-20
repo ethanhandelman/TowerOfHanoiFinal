@@ -146,7 +146,6 @@ public class Tutor {
      * Enables the tutor, allowing it to provide feedback.
      */
     public void enable() {
-        speak("Im here to help!");
         enabled = true;
         speak("Im here to help! Play when you are ready!");
     }
