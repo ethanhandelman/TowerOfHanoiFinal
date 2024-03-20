@@ -64,13 +64,19 @@ public class Repository{
     }
 
     public boolean checkWin(){
+        System.out.println("checking for win");
         return (towers.getFirst().isEmpty() && towers.getLast().isEmpty()) || (towers.getFirst().isEmpty() && towers.get(1).isEmpty());
     }
 
     private void logMove(Move move){
         moves.push(move);
         System.out.println(towers);
-        changes.firePropertyChange("move", null, move);
+        if(!checkWin()){
+            changes.firePropertyChange("move", null, move);
+        }else{
+            changes.firePropertyChange("win", null, move);
+        }
+
     }
 
     public Move popLastValidMove(){

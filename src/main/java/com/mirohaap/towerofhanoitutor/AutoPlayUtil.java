@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class AutoPlayUtil {
     private DragDropUtil dragDropUtil;
     private ScheduledExecutorService exec;
-    private TranslateTransition lastTransition;
     private MutableBoolean reenable;
     public AutoPlayUtil(DragDropUtil dragDropUtil){
         this.dragDropUtil = dragDropUtil;
@@ -29,12 +28,12 @@ public class AutoPlayUtil {
                 Move next = Tutor.getInstance().getNextMove();
                 next.setValid(true);
                 Repository.getInstance().applyMove(next);
-                Platform.runLater(() -> lastTransition = dragDropUtil.animateMove(next, interval * 0.9, reenable));
+                Platform.runLater(() -> dragDropUtil.animateMove(next, interval * 0.9, reenable));
 
-                if(Repository.getInstance().checkWin()){
+                /*if(Repository.getInstance().checkWin()){
                     exec.shutdown();
                     System.out.println("Autoplay won!");
-                }
+                }*/
 
             }
         };
@@ -44,7 +43,7 @@ public class AutoPlayUtil {
 
     public void stopPlaying(){
         exec.shutdown();
-        if(lastTransition.getStatus() == Animation.Status.RUNNING){
+        if(AnimationRepository.getInstance().animationsRunning()){
             reenable.setTrue();
         }
         else{

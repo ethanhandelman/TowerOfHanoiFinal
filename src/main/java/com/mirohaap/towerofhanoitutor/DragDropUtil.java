@@ -219,6 +219,7 @@ public class DragDropUtil {
                 moving.getVisualRing().setLayoutX(destinationX);
                 moving.getVisualRing().setLayoutY(destinationY);
                 moving.getVisualRing().setViewOrder(0);
+                AnimationRepository.getInstance().remove(transition);
                 if(reenable.isTrue()){
                     System.out.println("enabling");
                     enableUserInput();
@@ -226,9 +227,18 @@ public class DragDropUtil {
             }
         });
 
+        AnimationRepository.getInstance().add(transition);
         transition.play();
         return transition;
 
+    }
+
+    public void allowUserInput(boolean allow){
+        if(allow){
+            enableUserInput();
+        }else{
+            disableUserInput();
+        }
     }
 
     public void disableUserInput(){

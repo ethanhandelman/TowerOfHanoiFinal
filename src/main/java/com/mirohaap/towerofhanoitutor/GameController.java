@@ -34,7 +34,6 @@ public class GameController implements PropertyChangeListener {
     @FXML
     public TextFlow tutorText;
 
-    TranslateTransition currentTransition;
     private DragDropUtil dragDropUtil;
     private AutoPlayUtil autoPlayUtil;
 
@@ -47,6 +46,8 @@ public class GameController implements PropertyChangeListener {
             nextButton.setVisible(false);
             secondsDisplay.setVisible(false);
             timeLabel.setVisible(false);
+        }else{
+            backButton.setDisable(true);
         }
 
         secondsDisplay.textProperty().bind(
@@ -86,6 +87,7 @@ public class GameController implements PropertyChangeListener {
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
         Repository.getInstance().addListener(this);
+        AnimationRepository.getInstance().addListener(this);
     }
 
     @FXML
@@ -95,17 +97,18 @@ public class GameController implements PropertyChangeListener {
 
     @FXML
     public void beginAutoPlay(){
-        if(autoPlayUtil == null){
+
+        if(autoPlayUtil == null && !AnimationRepository.getInstance().animationsRunning()){
             //autoPlayButton.setDisable(true);
             allowInteractions(false);
             autoPlayUtil = new AutoPlayUtil(dragDropUtil);
             autoPlayUtil.beginPlaying((int) (speedSlider.getValue() * 1000));
             autoPlayButton.setText("Pause");
         }
-        else{
+        else if (autoPlayUtil != null){
             autoPlayUtil.stopPlaying();
             autoPlayUtil = null;
-            allowInteractions(true);
+            //allowInteractions(true);
             autoPlayButton.setText("AutoPlay");
         }
 
@@ -113,40 +116,79 @@ public class GameController implements PropertyChangeListener {
 
     @FXML
     public void stepForward(){
-        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
+        if(AnimationRepository.getInstance().animationsRunning()){
             return;
         }
         dragDropUtil.disableUserInput();
+        allowInteractions(false);
         Move next = Tutor.getInstance().getNextMove();
         next.setValid(true);
         Repository.getInstance().applyMove(next);
-        currentTransition = dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+        dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(false));
 
 
-        if(Repository.getInstance().checkWin()){
-            System.out.println("Autoplay won!");
-            allowInteractions(false);
-            autoPlayButton.setText("AutoPlay");
-            autoPlayButton.setDisable(true);
-            dragDropUtil.disableUserInput();
-        }
     }
 
     @FXML
     public void stepBack(){
-        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
+        if(AnimationRepository.getInstance().animationsRunning()){
             return;
         }
         dragDropUtil.disableUserInput();
+        allowInteractions(false);
+
         Move last = Repository.getInstance().popLastValidMove();
         Tutor.getInstance().revertMove();
 
-        currentTransition = dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
-
+        dragDropUtil.animateMove(last.reversed(), speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(false));
     }
 
     public void propertyChange(PropertyChangeEvent evt){
-        System.out.println("move made" + (Move) evt.getNewValue());
+
+        switch(evt.getPropertyName()){
+            case "move":
+                System.out.println("move made" + (Move) evt.getNewValue());
+                if(!AnimationRepository.getInstance().animationsRunning() && autoPlayUtil == null){
+                    System.out.println("enabling back");
+                    backButton.setDisable(!(Repository.getInstance().getValidMoveCount() > 0));
+                }
+                break;
+            case "all_animations_complete":
+                updateInterface();
+                break;
+            case "win":
+
+                allowInteractions(false);
+                if(autoPlayUtil != null){
+                    autoPlayUtil.stopPlaying();
+                }
+                dragDropUtil.disableUserInput();
+
+
+                gameComplete();
+                System.out.println("win detected");
+                backButton.setDisable(false);
+
+                break;
+        }
+
+    }
+
+    private void updateInterface(){
+        if(autoPlayUtil != null){
+            speedSlider.setDisable(true);
+            return;
+        }
+        if(Tutor.getInstance().isEnabled()){
+            backButton.setDisable(!(Repository.getInstance().getValidMoveCount() > 0));
+            nextButton.setDisable(!Tutor.getInstance().movesLeft());
+            autoPlayButton.setDisable(!Tutor.getInstance().movesLeft());
+            dragDropUtil.allowUserInput(Tutor.getInstance().movesLeft());
+            speedSlider.setDisable(false);
+        }
+        else{
+            dragDropUtil.allowUserInput(!Repository.getInstance().checkWin());
+        }
     }
 
     private void allowInteractions(boolean canInteract){
