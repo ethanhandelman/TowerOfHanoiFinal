@@ -9,10 +9,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
 
 
 
@@ -218,6 +219,7 @@ public class DragDropUtil {
                 moving.getVisualRing().setLayoutX(destinationX);
                 moving.getVisualRing().setLayoutY(destinationY);
                 moving.getVisualRing().setViewOrder(0);
+                AnimationRepository.getInstance().remove(transition);
                 if(reenable.isTrue()){
                     System.out.println("enabling");
                     enableUserInput();
@@ -225,9 +227,18 @@ public class DragDropUtil {
             }
         });
 
+        AnimationRepository.getInstance().add(transition);
         transition.play();
         return transition;
 
+    }
+
+    public void allowUserInput(boolean allow){
+        if(allow){
+            enableUserInput();
+        }else{
+            disableUserInput();
+        }
     }
 
     public void disableUserInput(){

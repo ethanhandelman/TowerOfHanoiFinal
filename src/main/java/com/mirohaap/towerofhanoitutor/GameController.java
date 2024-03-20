@@ -50,13 +50,15 @@ public class GameController implements PropertyChangeListener {
             nextButton.setVisible(false);
             secondsDisplay.setVisible(false);
             timeLabel.setVisible(false);
+        }else{
+            backButton.setDisable(true);
         }
 
         secondsDisplay.textProperty().bind(
                 Bindings.format(
-                "%.2f",
-                speedSlider.valueProperty()
-        ));
+                        "%.2f",
+                        speedSlider.valueProperty()
+                ));
 
 
 
@@ -89,6 +91,7 @@ public class GameController implements PropertyChangeListener {
 
         this.dragDropUtil = new DragDropUtil(gamePanel, rings);
         Repository.getInstance().addListener(this);
+        AnimationRepository.getInstance().addListener(this);
     }
 
     @FXML
@@ -108,17 +111,18 @@ public class GameController implements PropertyChangeListener {
 
     @FXML
     public void beginAutoPlay(){
-        if(autoPlayUtil == null){
+
+        if(autoPlayUtil == null && !AnimationRepository.getInstance().animationsRunning()){
             //autoPlayButton.setDisable(true);
             allowInteractions(false);
             autoPlayUtil = new AutoPlayUtil(dragDropUtil);
             autoPlayUtil.beginPlaying((int) (speedSlider.getValue() * 1000));
             autoPlayButton.setText("Pause");
         }
-        else{
+        else if (autoPlayUtil != null){
             autoPlayUtil.stopPlaying();
             autoPlayUtil = null;
-            allowInteractions(true);
+            //allowInteractions(true);
             autoPlayButton.setText("AutoPlay");
         }
 
@@ -126,23 +130,17 @@ public class GameController implements PropertyChangeListener {
 
     @FXML
     public void stepForward(){
-        if(currentTransition != null && currentTransition.getStatus() == Animation.Status.RUNNING){
+        if(AnimationRepository.getInstance().animationsRunning()){
             return;
         }
         dragDropUtil.disableUserInput();
+        allowInteractions(false);
         Move next = Tutor.getInstance().getNextMove();
         next.setValid(true);
         Repository.getInstance().applyMove(next);
-        currentTransition = dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(true));
+        dragDropUtil.animateMove(next, speedSlider.getValue() * 1000 * 0.9, new MutableBoolean(false));
 
 
-        if(Repository.getInstance().checkWin()){
-            System.out.println("Autoplay won!");
-            allowInteractions(false);
-            autoPlayButton.setText("AutoPlay");
-            autoPlayButton.setDisable(true);
-            dragDropUtil.disableUserInput();
-        }
     }
 
     @FXML

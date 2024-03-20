@@ -9,6 +9,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class StartGameController {
@@ -18,19 +19,12 @@ public class StartGameController {
     private Spinner ringCounter;
     @FXML
     private CheckBox tutorCheckBox;
-    private Window window;
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
         SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 10, 6, 1);
         ringCounter.setValueFactory(valueFactory);
         valueFactory.setWrapAround(true);
-    }
-
-
-    @FXML
-    public void setWindow(Window window){
-        this.window = window;
     }
 
     @FXML
@@ -45,7 +39,6 @@ public class StartGameController {
         FXMLLoader fxmlLoader = new FXMLLoader(Window.class.getResource("game-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 809, 642);
         GameController controller = fxmlLoader.getController();
-        controller.setWindow(window);
         controller.textToDisplay("I'm here to help!");
 
         gameStage.setTitle("Tower of Hanoi");
